@@ -1,213 +1,136 @@
-<p align="center">
-  <a href="https://www.fastflowlm.com" target="_blank">
-    <img src="assets/logo.png" alt="FastFlowLM Logo" width="200"/>
-  </a>
-</p>
+# ⚡ VeloceNPU
 
 <p align="center">
-  <img src="https://img.shields.io/badge/NPU-Optimized-red" />
+  <img src="https://img.shields.io/badge/AMD-Ryzen™%20AI%20NPU-red" />
+  <img src="https://img.shields.io/badge/Architecture-XDNA%201%20%7C%20XDNA%202-blue" />
+  <img src="https://img.shields.io/badge/C%2B%2B-20-blue" />
+  <img src="https://img.shields.io/badge/License-MIT-green" />
 </p>
 
-## ⚡ FastFlowLM (FLM) — Unlock Ryzen™ AI NPUs
+**VeloceNPU** is a lightweight, high-performance inference engine built for **AMD Ryzen™ AI NPUs**. It enables fast, private, and energy-efficient local execution of large language and multimodal models across **XDNA 1** and **XDNA 2** silicon without relying on discrete GPUs.
 
-Run large language models — now with **Vision**, **Audio**, **Embedding** and **MoE** support — on **AMD Ryzen™ AI NPUs** in minutes.  
-**No GPU required. Faster and over 10× more power-efficient. Supports context lengths up to 256k tokens. Ultra-Lightweight (17 MB). Installs within 20 seconds.**
-
-📦 **The only out-of-box, NPU-first runtime built exclusively for Ryzen™ AI.**  
-🤝 **A familiar single-command CLI — deeply optimized for NPUs.**  
-✨ **From Idle Silicon to Instant Power — FastFlowLM Makes Ryzen™ AI Shine.**
-
-> FastFlowLM (FLM) supports all Ryzen™ AI Series chips with XDNA2 NPUs (Strix, Strix Halo, Kraken, and Gorgon Point).
+Forked from and built on the foundation of [FastFlowLM](https://github.com/ROCm/FastFlowLM) (ROCm), **VeloceNPU** introduces automated hardware autodetection for AIE2 architectures (Phoenix and Hawk Point), hybrid CPU/NPU execution fallbacks, and first-class support for multimodal model families including **Liquid Foundation Models (LFM3)**.
 
 ---
 
-## 🔗 Quick Links
+## 🚀 Key Features
 
-  🔽 **[Download](https://github.com/ROCm/FastFlowLM/releases/latest/download/flm-setup.msi)** | 📊 **[Benchmarks](https://fastflowlm.com/docs/benchmarks/)** | 📦 **[Model List](https://fastflowlm.com/docs/models/)**  
-
-  🐧 **[Linux Getting Started Guide](./docs/linux-getting-started.md)**
-
-  📖 **[Docs](https://fastflowlm.com/docs)** | 📺 **[Demos](https://www.youtube.com/playlist?list=PLf87s9UUZrJoDdz639Yc6w1UTyJ4cFHZ1)** | 💬 **[Discord](https://discord.gg/z24t23HsHF)** 
+- **Broad NPU Generation Support**:
+  - **XDNA 1 / AIE2**: Phoenix and Hawk Point (4 compute columns + 1 memory column) with automatic PCI ID (`0x1502`) detection.
+  - **XDNA 2 / AIE2P**: Strix, Strix Halo, and Krackan Point (8 columns) with full native bitstream acceleration.
+- **Hybrid Execution Engine**:
+  - Automatically identifies column topologies and seamlessly falls back to optimized AVX2/AVX-512 FMA vectorization when column-specific NPU bitstreams are not mapped, preventing hardware dispatch hangs.
+- **Multimodal Pipeline Support**:
+  - Full support for text, vision, and speech processing, including **LFM3-1.7B**, **LFM3-VL**, **LFM3-Audio**, and **LFM3-Omni**.
+- **Minimal Footprint & Zero Overhead**:
+  - Self-contained C++20 runtime (~17 MB) with no heavy Python runtime dependencies during inference.
+- **Unified CLI & Server**:
+  - Straightforward command-line interface for hardware validation, interactive chat, multimodal input processing, and OpenAI-compatible REST server serving.
 
 ---
 
-## 🚀 Quick Start
+## 🛠️ Quick Start
 
-A packaged FLM Windows installer is available here: [**flm-setup.msi**](https://github.com/ROCm/FastFlowLM/releases/latest/download/flm-setup.msi). For more details, see the [release notes](https://github.com/ROCm/FastFlowLM/releases/).
+### 1. Prerequisites
 
-📺 [**Watch the quick start video (Windows)**](https://www.youtube.com/watch?v=mYOfDNkyBII)
+- **Linux** (Kernel 6.10+ recommended with `amdxdna` driver) or **Windows 11** with AMD NPU driver.
+- **CMake** (>= 3.22), **C++20** compatible compiler (GCC >= 12, Clang >= 15, or MSVC).
+- **Boost** libraries (`boost-devel` / `brew install boost`).
+- **Ninja** or GNU Make.
 
-> [!IMPORTANT]  
-> ⚠️ Use the **latest** AMD NPU driver — **32.0.203.311 or above** (check via Task Manager→Performance→NPU or Device Manager). Earlier versions are no longer supported.  
-> ⚙️ **Tip:**
->   * **RECOMMENDED**: Try running **Windows Update** or **[Driver Download](https://www.amd.com/en/support)**.
->   * **[Official AMD Install Doc](https://ryzenai.docs.amd.com/en/latest/inst.html#install-npu-drivers)** *(AMD account required)*.
->   * **[Unofficial forum downloads](https://www.elevenforum.com/t/drivers-amd-npu-ryzen-8xxx-9xxx-apu.24220/)** *(CAUTION: third-party content not verified by AMD; download and use at your own risk)*.
+### 2. Clone and Build
 
-After installation, open **PowerShell** (`Win + X → I`). To run a model in terminal (**CLI Mode**):
-```powershell
-flm run llama3.2:1b
+```bash
+git clone --recursive https://github.com/khoipm06/VeloceNPU.git
+cd VeloceNPU
+
+# Fetch runtime dependencies
+./hrx-integration/fetch-hrx-release.sh
+
+# Configure and build
+cmake -B build -S src -G Ninja \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DFLM_USE_HRX=ON \
+  -DFLM_PORTABLE_BUILD=ON
+
+ninja -C build flm
 ```
-> **Notes:**
-> - Internet access to HuggingFace is required to download the optimized model kernels.
-> - Sometimes downloads from HuggingFace may get corrupted. If this happens, run `flm pull <model_tag> --force` (e.g. `flm pull llama3.2:1b --force`) to re-download and fix them.
-> - By default, models are stored in:
->   - **Windows**: `C:\Users\<USER>\.flm\models\`
->   - **Linux**: `~/.config/flm/`
-> - During installation on Windows, you can select a different base folder (e.g., if you choose `C:\Users\<USER>\flm`, models will be saved under `C:\Users\<USER>\flm\models\`).
-> - On Linux, you can override the default location by setting the `FLM_MODEL_PATH` environment variable.
-> - To disable the startup version check, set `FLM_DISABLE_UPDATE_CHECK=1`.
-> - ⚠️ If HuggingFace is not accessible in your region, manually download the model ([check this issue](https://github.com/ROCm/FastFlowLM/issues/2)) and place it in the chosen directory.   
 
-🎉🚀 FastFlowLM (FLM) is ready — your NPU is unlocked and you can start chatting with models right away!
+### 3. Verify Hardware
 
-Open **Task Manager** (`Ctrl + Shift + Esc`). Go to the **Performance** tab → click **NPU** to monitor usage.  
+Check your NPU hardware, column topology, firmware, and driver stack:
 
-> **⚡ Quick Tips:**  
-> - Use `/verbose` during a session to turn on performance reporting (toggle off with `/verbose` again).   
-> - Type `/bye` to exit a conversation.  
-> - Run `flm list` in PowerShell to show all available models.  
-
-To start the local server (**Server Mode**):
-```powershell
-flm serve llama3.2:1b
+```bash
+./build/flm validate
 ```
-> The model tag (e.g., `llama3.2:1b`) sets the initial model, which is optional. If another model is requested, FastFlowLM will automatically switch to it. The local server runs on port 52625 (default).  
 
-**[![FastFlowLM Docs](https://img.shields.io/badge/FastFlowLM-Detailed%20Instructions-red?style=flat&logo=readthedocs)](https://fastflowlm.com/docs/instructions/)**
-
----
-
-## 📰 In the News
-
-- 08/11/2026 🎉 FLM is now part of **[ROCm](https://github.com/ROCm/FastFlowLM)** (v1.0.0) — the repo has moved to AMD's open-source ROCm organization.
-
-- 08/11/2026 🎉 FLM releases its first **SmolVLA** model (v1.0.0) — a Vision-Language-Action robotics policy running on the NPU. See the **[model card](https://fastflowlm.com/docs/models/smolvla/)** and **[benchmarks](https://fastflowlm.com/docs/benchmarks/smolvla_results/)**.
-
-- 07/17/2026 🎉 FLM is now part of AMD **[news](https://www.amd.com/en/blogs/2026/fastflowlm-joins-amd-to-advance-ai-inference.html)**. Read **[our story](./flm_story.md)** — from a 2025 university project to AMD.
-
-- 03/11/2026 🎉 FLM now supports Linux 🐧 ! To get started, check out the **[quick start guide](https://fastflowlm.com/docs/install_lin/)** or the **[Lemonade Server docs](https://lemonade-server.ai/flm_npu_linux.html)**, and watch the **[short video](https://www.youtube.com/watch?v=tXRchP3sKA8)** for a quick walkthrough of FLM on Linux via Lemonade 🍋.
-
-- 10/01/2025 🎉 FLM was integrated into AMD's **[Lemonade Server](https://lemonade-server.ai/)** 🍋. Watch this **[short demo](https://www.youtube.com/watch?v=w0Tb3h4WUnE)** about using FLM in Lemonade.
+Example output on an AMD Hawk Point (XDNA 1) system:
+```text
+[Linux]  Kernel: 7.x.x
+[Linux]  NPU: /dev/accel/accel0 with 5 columns
+[Linux]  NPU FW Version: 1.5.x
+[Linux]  amdxdna version: 0.10
+[Linux]  NPU platform: aie2
+```
 
 ---
 
-## 🧠 Local AI on NPU
+## 💬 Running Models
 
-FLM makes it easy to run cutting-edge **LLMs** (and now **VLMs**) locally with:
-- ⚡ Fast and low power
-- 🧰 Simple CLI and API (REST and OpenAI API)
-- 🔐 Fully private and offline
+### List Available Models
 
-No model rewrites, no tuning — it just works.
+```bash
+./build/flm list
+```
 
----
+### Text Inference
 
-## ✅ Highlights
+```bash
+./build/flm run lfm3:1.7b
+```
 
-- **Runs fully on AMD Ryzen™ AI NPU** — no GPU or CPU load
-- **Lightweight runtime (17 MB)** — installs within **20 seconds**, easy to integrate    
-- **Developer-first flow** — a familiar single-command CLI, optimized for NPU  
-- **Support for long context windows** — up to 256k tokens (e.g., Qwen3-4B-Thinking-2507)  
-- **No low-level tuning required** — You focus on your app, we handle the rest
+### Vision, Audio & Multimodal
 
----
+For vision and audio-enabled models, media files can be passed via `/input` in interactive mode:
 
-## 📄 License
+```bash
+# Vision-Language (LFM3-VL)
+./build/flm run lfm3-vl:1.7b
+>>> /input path/to/image.png Describe what is in this image.
 
-- All orchestration code and CLI tools are open-source under the [MIT License](./LICENSE_RUNTIME.txt).  
-- The NPU-accelerated binary kernels are not open source, but are completely free for any use, including non-commercial and commercial use, and may be freely redistributed in unmodified form under the [FastFlowLM NPU Binary License](./LICENSE_BINARY.txt).
-- The FastFlowLM developer kit in [`flm-dev-kit/`](./flm-dev-kit/) (NPU engine and kernel sources, the Q4NX converter, and the prebuilt aiebu libraries the engines link) is open-source under the [MIT License](./LICENSE_RUNTIME.txt). Files that carry their own license line, such as code derived from mlir-aie, keep that license.  
-- Third-party components and their licenses are listed in [THIRD_PARTY_NOTICES.txt](./THIRD_PARTY_NOTICES.txt).
-- Please acknowledge FastFlowLM in your README/project page (or product) as follows:
-  ```
-  Powered by [FastFlowLM](https://github.com/ROCm/FastFlowLM)
-  ```
-  
----
+# Audio (LFM3-Audio)
+./build/flm run lfm3-audio:1.7b
+>>> /input path/to/audio.wav Summarize this recording.
 
-💬 Have **feedback/issues** or want **early access** to our new releases? [Open an issue](https://github.com/ROCm/FastFlowLM/issues/new) or [Join our Discord community](https://discord.gg/z24t23HsHF)
+# Multimodal Omni (LFM3-Omni)
+./build/flm run lfm3-omni:1.7b
+>>> /input path/to/image.png Describe this scene.
+```
 
----
+### Serve via API
 
-## 🙏 Acknowledgements
+Start an OpenAI-compatible REST API server:
 
-- Powered by the advanced **AMD Ryzen™ AI NPU architecture**
-- Inspired by the widely adopted [llama.cpp](https://github.com/ggml-org/llama.cpp) and [Ollama](https://github.com/ollama/ollama)
-- Tokenization accelerated with [MLC-ai/tokenizers-cpp](https://github.com/mlc-ai/tokenizers-cpp)
-- Chat formatting via [Google/minja](https://github.com/google/minja)
-- Constrained decoding (tool calls, structured output) powered by [MLC-ai/xgrammar](https://github.com/mlc-ai/xgrammar)
-- Low-level kernels optimized using the powerful [IRON](https://github.com/amd/iron)+[AIE-MLIR](https://github.com/Xilinx/mlir-aie)
+```bash
+./build/flm serve lfm3:1.7b --port 52625
+```
 
 ---
 
-## 🛠️ Building from Source
+## ⚙️ Environment Variables
 
-For developers who want to build FastFlowLM from source, we provide CMake presets for a convenient and consistent build experience.
+| Variable | Description |
+| :--- | :--- |
+| `VELOCE_PLATFORM` / `FLM_FORCE_PLATFORM` | Override detected platform (`aie2`, `aie2p`, `dev04`). |
+| `FLM_MODEL_PATH` | Path to downloaded models directory (default: `~/.config/flm/models`). |
+| `LFM3_PREFILL` | Prefill backend override (`host`, `npu`). |
+| `LFM3_DECODE` | Decode backend override (`host`, `npu`). |
 
-To build the NPU engines, kernels and weight converter themselves, see [flm-dev-kit/README.md](flm-dev-kit/README.md).
+---
 
-### Prerequisites
+## 📄 License & Attribution
 
-- Git
-- CMake (version 3.22 or higher)
-- A C++20 compatible compiler (e.g., GCC, Clang, MSVC)
-- Ninja (recommended)
-
-### Build Instructions
-
-More details on the exact procedure, with dependencies to be installed, for Linux can be found in [linux-getting-started.md](docs/linux-getting-started.md).
-
-1.  **Clone the repository:**
-
-    ```bash
-    git clone --recursive https://github.com/ROCm/FastFlowLM.git
-    cd FastFlowLM/src
-    ```
-
-2.  **Configure CMake using presets:**
-
-    -   **For Linux:**
-
-        ```bash
-        cmake --preset linux-default
-        ```
-
-        This will configure the build to install to `/opt/fastflowlm`.
-
-        To build the Gemma 4 engine from source instead of using the prebuilt engine:
-
-        ```bash
-        cmake --preset linux-default -DFLM_BUILD_GEMMA4E=ON
-        cmake --build build
-        ```
-
-        CMake caches this option. To switch back to the prebuilt engine, reconfigure with `-DFLM_BUILD_GEMMA4E=OFF` or use a fresh build directory.
-
-    -   **For Windows (in a developer command prompt):**
-
-        ```bash
-        cmake --preset windows-default
-        ```
-
-        Add `-DFLM_BUILD_GEMMA4E=ON` to build the Gemma 4 engine from source.
-
-3.  **Build the project:**
-
-    ```bash
-    cmake --build build
-    ```
-
-4.  **Install the project (optional):**
-
-    -   **For Linux:**
-
-        ```bash
-        sudo cmake --install build
-        ```
-
-    -   **For Windows (with administrator privileges):**
-
-        ```bash
-        cmake --install build
-        ```
+- Orchestration code, frontend interfaces, and CLI tools are licensed under the [MIT License](./LICENSE_RUNTIME.txt).
+- Binary kernel runtimes are subject to the [FastFlowLM NPU Binary License](./LICENSE_BINARY.txt).
+- Developer kit tools in [`flm-dev-kit/`](./flm-dev-kit/) are licensed under the [MIT License](./LICENSE_RUNTIME.txt).
+- Powered by [FastFlowLM](https://github.com/ROCm/FastFlowLM).
