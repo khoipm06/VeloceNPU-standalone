@@ -426,7 +426,7 @@ ENGINES = {
     ("hy_mem", "hy_memory"):                 ("hy-memory",),
     ("gpt_oss",):                            ("gpt-oss",),
     ("lfm2",):                               ("lfm2", "lfm2.5-tk"),
-    ("lfm3",):                               ("lfm3",),
+    ("lfm3",):                               ("lfm3", "lfm3-vl", "lfm3-audio", "lfm3-omni"),
     ("nanbeige",):                           ("nanbeige",),
     ("phi4",):                               ("phi4",),
     ("gemma_embedding",):                    ("embed-gemma",),

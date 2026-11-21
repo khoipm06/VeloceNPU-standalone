@@ -157,10 +157,16 @@
     },
     "lfm3_npu": {
       "families": [
-        "lfm3"
+        "lfm3",
+        "lfm3-vl",
+        "lfm3-audio",
+        "lfm3-omni"
       ],
       "models": [
-        "lfm3:1.7b"
+        "lfm3:1.7b",
+        "lfm3-vl:1.7b",
+        "lfm3-audio:1.7b",
+        "lfm3-omni:1.7b"
       ],
       "uses": []
     },

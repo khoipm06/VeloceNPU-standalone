@@ -1018,6 +1018,7 @@
             "1.7b": {
                 "supported_platforms": ["aie2p", "aie2"],
                 "name": "LFM3-1.7B-NPU2",
+                "xclbin_folder": "LFM3-1.7B-NPU2",
                 "url": "https://huggingface.co/FastFlowLM/LFM3-1.7B-NPU2",
                 "file_url": "https://huggingface.co/api/models/FastFlowLM/LFM3-1.7B-NPU2/tree/main",
                 "ms_url": "https://modelscope.cn/models/amd/LFM3-1.7B-NPU2",
@@ -1054,6 +1055,7 @@
             "1.7b": {
                 "supported_platforms": ["aie2p", "aie2"],
                 "name": "LFM3-1.7B-NPU2",
+                "xclbin_folder": "LFM3-1.7B-NPU2",
                 "url": "https://huggingface.co/FastFlowLM/LFM3-1.7B-NPU2",
                 "file_url": "https://huggingface.co/api/models/FastFlowLM/LFM3-1.7B-NPU2/tree/main",
                 "ms_url": "https://modelscope.cn/models/amd/LFM3-1.7B-NPU2",
@@ -1090,6 +1092,7 @@
             "1.7b": {
                 "supported_platforms": ["aie2p", "aie2"],
                 "name": "LFM3-1.7B-NPU2",
+                "xclbin_folder": "LFM3-1.7B-NPU2",
                 "url": "https://huggingface.co/FastFlowLM/LFM3-1.7B-NPU2",
                 "file_url": "https://huggingface.co/api/models/FastFlowLM/LFM3-1.7B-NPU2/tree/main",
                 "ms_url": "https://modelscope.cn/models/amd/LFM3-1.7B-NPU2",

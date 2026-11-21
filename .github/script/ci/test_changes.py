@@ -839,7 +839,7 @@ class DevKitFamilies(unittest.TestCase):
         del base["engines"]["lfm3_npu"]
         git = FakeGit(base={changes.DEVKIT_ENGINES: json.dumps(base)})
         d = changes.decide([changes.DEVKIT_ENGINES], git, None, changes.DevkitEngines.parse(json.dumps(head)))
-        self.assertEqual(d.devkit_families, {"qwen2", "lfm3"})
+        self.assertEqual(d.devkit_families, {"qwen2", "lfm3", "lfm3-vl", "lfm3-audio", "lfm3-omni"})
         # Without the base to compare with: every family.
         d = changes.decide([changes.DEVKIT_ENGINES], None, None, changes.DevkitEngines.parse(json.dumps(head)))
         self.assertEqual(d.devkit_families, self.all)

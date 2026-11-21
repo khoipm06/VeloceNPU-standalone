@@ -58,6 +58,9 @@ PR_CHAT = {
     "minicpm-v-4.7-moe": None,  # 22 GB, the only model of its engine; runs when the change touches it
     "lfm2": "lfm2:1.2b",
     "lfm3": "lfm3:1.7b",
+    "lfm3-vl": None,
+    "lfm3-audio": None,
+    "lfm3-omni": None,
     "lfm2.5-tk": "lfm2.5-tk:1.2b",
     "phi4": "phi4-mini-it:4b",
     "gemma3-text": "gemma3:1b",
