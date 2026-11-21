@@ -999,6 +999,7 @@
                 },
                 "flm_min_version": "1.0.11",
                 "vlm": false,
+                "asr": false,
                 "files": [
                     "config.json",
                     "model.q4nx",
@@ -1033,6 +1034,7 @@
                 },
                 "flm_min_version": "1.0.11",
                 "vlm": true,
+                "asr": false,
                 "files": [
                     "config.json",
                     "model.q4nx",
@@ -1068,6 +1070,7 @@
                 },
                 "flm_min_version": "1.0.11",
                 "vlm": false,
+                "asr": true,
                 "files": [
                     "config.json",
                     "model.q4nx",
@@ -1103,6 +1106,7 @@
                 },
                 "flm_min_version": "1.0.11",
                 "vlm": true,
+                "asr": true,
                 "files": [
                     "config.json",
                     "model.q4nx",
