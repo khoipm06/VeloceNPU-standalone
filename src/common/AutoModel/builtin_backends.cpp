@@ -96,6 +96,9 @@ void register_builtin_backends(BackendRegistry& registry) {
     RegisterFlm<lfm2_npu>(registry, "lfm2");
     RegisterFlm<lfm2_npu>(registry, "lfm2.5-tk");
     RegisterFlm<lfm3_npu>(registry, "lfm3");
+    RegisterFlm<lfm3_npu>(registry, "lfm3-vl");
+    RegisterFlm<lfm3_npu>(registry, "lfm3-audio");
+    RegisterFlm<lfm3_npu>(registry, "lfm3-omni");
     RegisterFlm<nanbeige_npu>(registry, "nanbeige");
     RegisterFlm<phi4_npu>(registry, "phi4");
 

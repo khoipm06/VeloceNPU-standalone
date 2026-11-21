@@ -87,6 +87,9 @@ void register_builtin_frontends(FrontendRegistry& registry) {
     Register<LFM2>(registry, "lfm2");
     Register<LFM2_5_TK>(registry, "lfm2.5-tk");
     Register<LFM3>(registry, "lfm3");
+    Register<LFM3_VL>(registry, "lfm3-vl");
+    Register<LFM3_Audio>(registry, "lfm3-audio");
+    Register<LFM3_Omni>(registry, "lfm3-omni");
     Register<Nanbeige>(registry, "nanbeige");
     Register<Hunyuan>(registry, "hunyuan");
     Register<HyMemory>(registry, "hy-memory");

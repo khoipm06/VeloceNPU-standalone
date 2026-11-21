@@ -576,7 +576,9 @@ class model_list {
                     throw std::runtime_error(
                         "supported_platforms must contain strings: " + tag);
                 }
-                if (value.get<std::string>() == this->platform_) return true;
+                const auto plat_str = value.get<std::string>();
+                if (plat_str == this->platform_) return true;
+                if (this->platform_ == "aie2" && plat_str == "aie2p") return true;
             }
             return false;
         }

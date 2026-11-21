@@ -20,16 +20,22 @@ namespace utils {
 
 /// \brief NPU generation an FLM build targets
 enum class npu_platform {
-    aie2p,    ///< the AIE2P generation: Strix / Strix Halo / Krackan Point
+    aie2,     ///< the AIE2 generation: Phoenix / Hawk Point (XDNA 1, 4/5 cols)
+    aie2p,    ///< the AIE2P generation: Strix / Strix Halo / Krackan Point (XDNA 2, 8 cols)
     dev04     ///< the next NPU generation, not yet announced
 };
 
 /// \brief the catalog id for a platform, as written in model_list.json
 /// \param platform the platform
-/// \return "aie2p" or "dev04"
+/// \return "aie2", "aie2p", or "dev04"
 constexpr std::string_view platform_id(npu_platform platform) {
-    return platform == npu_platform::dev04 ? std::string_view("dev04")
-                                              : std::string_view("aie2p");
+    switch (platform) {
+        case npu_platform::aie2: return "aie2";
+        case npu_platform::dev04: return "dev04";
+        case npu_platform::aie2p:
+        default:
+            return "aie2p";
+    }
 }
 
 /// \brief the generation assumed when nothing identifies one
@@ -38,7 +44,9 @@ constexpr npu_platform default_npu_platform() { return npu_platform::aie2p; }
 /// \brief the generation corelib's name for this machine's NPU stands for
 /// \param arch what corelib reports: "npu_aiem", "npu_aie2p", or "" for none it knows
 constexpr npu_platform platform_from_corelib_arch(std::string_view arch) {
-    return arch == "npu_aiem" ? npu_platform::dev04 : default_npu_platform();
+    if (arch == "npu_aiem") return npu_platform::dev04;
+    if (arch == "npu_aie2") return npu_platform::aie2;
+    return default_npu_platform();
 }
 
 /// \brief ask the machine which NPU generation it has

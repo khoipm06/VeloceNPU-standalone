@@ -10,23 +10,18 @@
 
 flm_rt::device npu_device_global;
 
-// Model-specific factory function for Llama family and DeepSeek_r1_8b
+// Model-specific factory function for LFM3 family
 inline std::pair<std::string, std::unique_ptr<AutoModel>> get_lfm3_model(const std::string& model_tag) {
-    static std::unordered_set<std::string> lfm3Tags = {
-        "lfm3", "lfm3:1.7b"
-    };
-
-    std::unique_ptr<AutoModel> auto_chat_engine = nullptr;
-    std::string new_model_tag = model_tag;
-
-    if (lfm3Tags.count(model_tag))
-        auto_chat_engine = std::make_unique<LFM3>(&npu_device_global);
-    else {
-        new_model_tag = "lfm3:1.7b"; // Default to LFM3 1.7B
-        auto_chat_engine = std::make_unique<LFM3>(&npu_device_global);
+    if (model_tag == "lfm3-vl" || model_tag == "lfm3-vl:1.7b") {
+        return {"lfm3-vl:1.7b", std::make_unique<LFM3_VL>(&npu_device_global)};
     }
-  
-    return std::make_pair(new_model_tag, std::move(auto_chat_engine));
+    if (model_tag == "lfm3-audio" || model_tag == "lfm3-audio:1.7b") {
+        return {"lfm3-audio:1.7b", std::make_unique<LFM3_Audio>(&npu_device_global)};
+    }
+    if (model_tag == "lfm3-omni" || model_tag == "lfm3-omni:1.7b") {
+        return {"lfm3-omni:1.7b", std::make_unique<LFM3_Omni>(&npu_device_global)};
+    }
+    return {"lfm3:1.7b", std::make_unique<LFM3>(&npu_device_global)};
 }
 
 
@@ -58,12 +53,11 @@ int main(int argc, char* argv[]) {
 
    
     header_print("info", "Initializing chat model...");
-    std::string model_path = model_list.get_model_path(tag);
-    std::pair<std::string, nlohmann::json> model_info_pair = model_list.get_model_info(tag);
+    auto [resolved_tag, chat] = get_lfm3_model(tag);
+    std::string model_path = model_list.get_model_path(resolved_tag);
+    std::pair<std::string, nlohmann::json> model_info_pair = model_list.get_model_info(resolved_tag);
     nlohmann::json model_info = model_info_pair.second;
     std::cout << "Model path: " << model_path << std::endl;
-
-    std::unique_ptr<AutoModel> chat = std::make_unique<LFM3>(&npu_device_global);
 
     npu_device_global = flm_rt::device(0); 
    

@@ -242,9 +242,9 @@ static bool check_memlock(nlohmann::json& validation_json, bool print_human) {
                     header_print_g("Linux", "Memlock Limit: set to infinity");
             } else {
                 if (print_human) {
-                    header_print_r("ERROR", "Memlock limit is too low (" << (rl.rlim_cur / 1024 / 1024) << "MB). Please raise the limit or set to infinity.");
+                    header_print("WARNING", "Memlock limit is " + std::to_string(rl.rlim_cur / 1024 / 1024) + "MB. For peak NPU DMA throughput, raise limit in /etc/security/limits.d/99-npu.conf");
                 }
-                memlock_ok = false;
+                memlock_ok = true;
             }
         } else if (print_human) {
             if (rl.rlim_cur == RLIM_INFINITY) {
@@ -421,10 +421,11 @@ static bool sanity_check_npu_stack(bool quiet, bool json_output = false) {
         get_info.buffer = (unsigned long)&query_aie_metadata;
         if (ioctl(fd, DRM_IOCTL_AMDXDNA_GET_INFO, &get_info) == 0) {
             device_entry["cols"] = query_aie_metadata.cols;
-            if (query_aie_metadata.cols < 8) {
+            const uint32_t min_cols = (utils::get_device() == utils::npu_platform::aie2) ? 4 : 8;
+            if (query_aie_metadata.cols < min_cols) {
                 enough_cols = false;
                 if (print_human) {
-                    header_print_r("ERROR", "NPU " + dev_name + " does not have enough columns (" << query_aie_metadata.cols << " < 8)");
+                    header_print_r("ERROR", "NPU " + dev_name + " does not have enough columns (" << query_aie_metadata.cols << " < " << min_cols << ")");
                 }
             }
         }

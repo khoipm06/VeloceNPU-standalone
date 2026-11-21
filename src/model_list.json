@@ -981,7 +981,7 @@
         },
         "lfm3": {
             "1.7b": {
-                "supported_platforms": ["aie2p"],
+                "supported_platforms": ["aie2p", "aie2"],
                 "name": "LFM3-1.7B-NPU2",
                 "url": "https://huggingface.co/FastFlowLM/LFM3-1.7B-NPU2",
                 "file_url": "https://huggingface.co/api/models/FastFlowLM/LFM3-1.7B-NPU2/tree/main",
@@ -1009,6 +1009,112 @@
                 "label": [
                     "reasoning",
                     "tool-calling"
+                ],
+                "footprint": 1.5
+            }
+        },
+        "lfm3-vl": {
+            "1.7b": {
+                "supported_platforms": ["aie2p", "aie2"],
+                "name": "LFM3-1.7B-NPU2",
+                "url": "https://huggingface.co/FastFlowLM/LFM3-1.7B-NPU2",
+                "file_url": "https://huggingface.co/api/models/FastFlowLM/LFM3-1.7B-NPU2/tree/main",
+                "ms_url": "https://modelscope.cn/models/amd/LFM3-1.7B-NPU2",
+                "size": 1700000000,
+                "default_context_length": 32768,
+                "max_prefill_len": 4096,
+                "details": {
+                    "format": "NPU2",
+                    "family": "lfm3-vl",
+                    "think": true,
+                    "think_toggleable": true,
+                    "parameter_size": "1.7B",
+                    "quantization_level": "Q4_0"
+                },
+                "flm_min_version": "1.0.11",
+                "vlm": true,
+                "files": [
+                    "config.json",
+                    "model.q4nx",
+                    "tokenizer.json",
+                    "tokenizer_config.json",
+                    "chat_template.jinja"
+                ],
+                "label": [
+                    "vision",
+                    "multimodal",
+                    "reasoning"
+                ],
+                "footprint": 1.5
+            }
+        },
+        "lfm3-audio": {
+            "1.7b": {
+                "supported_platforms": ["aie2p", "aie2"],
+                "name": "LFM3-1.7B-NPU2",
+                "url": "https://huggingface.co/FastFlowLM/LFM3-1.7B-NPU2",
+                "file_url": "https://huggingface.co/api/models/FastFlowLM/LFM3-1.7B-NPU2/tree/main",
+                "ms_url": "https://modelscope.cn/models/amd/LFM3-1.7B-NPU2",
+                "size": 1700000000,
+                "default_context_length": 32768,
+                "max_prefill_len": 4096,
+                "details": {
+                    "format": "NPU2",
+                    "family": "lfm3-audio",
+                    "think": true,
+                    "think_toggleable": true,
+                    "parameter_size": "1.7B",
+                    "quantization_level": "Q4_0"
+                },
+                "flm_min_version": "1.0.11",
+                "vlm": false,
+                "files": [
+                    "config.json",
+                    "model.q4nx",
+                    "tokenizer.json",
+                    "tokenizer_config.json",
+                    "chat_template.jinja"
+                ],
+                "label": [
+                    "audio",
+                    "speech",
+                    "reasoning"
+                ],
+                "footprint": 1.5
+            }
+        },
+        "lfm3-omni": {
+            "1.7b": {
+                "supported_platforms": ["aie2p", "aie2"],
+                "name": "LFM3-1.7B-NPU2",
+                "url": "https://huggingface.co/FastFlowLM/LFM3-1.7B-NPU2",
+                "file_url": "https://huggingface.co/api/models/FastFlowLM/LFM3-1.7B-NPU2/tree/main",
+                "ms_url": "https://modelscope.cn/models/amd/LFM3-1.7B-NPU2",
+                "size": 1700000000,
+                "default_context_length": 32768,
+                "max_prefill_len": 4096,
+                "details": {
+                    "format": "NPU2",
+                    "family": "lfm3-omni",
+                    "think": true,
+                    "think_toggleable": true,
+                    "parameter_size": "1.7B",
+                    "quantization_level": "Q4_0"
+                },
+                "flm_min_version": "1.0.11",
+                "vlm": true,
+                "files": [
+                    "config.json",
+                    "model.q4nx",
+                    "tokenizer.json",
+                    "tokenizer_config.json",
+                    "chat_template.jinja"
+                ],
+                "label": [
+                    "omni",
+                    "vision",
+                    "audio",
+                    "reasoning"
                 ],
                 "footprint": 1.5
             }

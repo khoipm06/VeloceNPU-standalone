@@ -4,6 +4,8 @@
 
 #pragma once
 #include "AutoModel/automodel.hpp"
+#include "image/image_reader.hpp"
+#include "audio/audio_reader.hpp"
 
 /************              LFM3 family            **************/
 class LFM3 : public AutoModel {
@@ -58,4 +60,32 @@ public:
         }
         return AutoModel::configure_parameter(parameter_name, value);
     }
+};
+
+/************              LFM3-VL family            **************/
+class LFM3_VL : public LFM3 {
+protected:
+    ImageReader image_reader_;
+public:
+    explicit LFM3_VL(flm_rt::device* npu_device_inst);
+    bool insert(chat_meta_info_t& meta_info, lm_uniform_input_t& input, std::function<bool()> is_cancelled = [] { return false; }) override;
+};
+
+/************              LFM3-Audio family            **************/
+class LFM3_Audio : public LFM3 {
+protected:
+    AudioReader audio_reader_;
+public:
+    explicit LFM3_Audio(flm_rt::device* npu_device_inst);
+    bool insert(chat_meta_info_t& meta_info, lm_uniform_input_t& input, std::function<bool()> is_cancelled = [] { return false; }) override;
+};
+
+/************              LFM3-Omni family            **************/
+class LFM3_Omni : public LFM3 {
+protected:
+    ImageReader image_reader_;
+    AudioReader audio_reader_;
+public:
+    explicit LFM3_Omni(flm_rt::device* npu_device_inst);
+    bool insert(chat_meta_info_t& meta_info, lm_uniform_input_t& input, std::function<bool()> is_cancelled = [] { return false; }) override;
 };
